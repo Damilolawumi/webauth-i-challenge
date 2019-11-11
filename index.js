@@ -1,13 +1,5 @@
-const express = require('express');
-const helmet = require('helmet');
-const bcrypt = require('bcryptjs')
+const server = require("./server.js");
 
-const server = express();
+const port = process.env.PORT || 5500;
+server.listen(port, () => console.log(`\n** Running on port ${port} **\n`));
 
-server.use(helmet());
-server.use(express.json());
-server.use(cors());
-
-server.get('/', (req, res) => {
-    res.send("i'm happy this worked!");
-  });
