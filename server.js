@@ -1,9 +1,9 @@
 const express = require("express");
+const session = require('express-session');
 
 const userRouter = require("./users/userRouter");
-const session = require('express-session');
 const KnexSessionStore = require('connect-session-knex')(session);
-const authRouter = require('../auth/auth-router.js');
+const authRouter = require('./auth/auth-router');
 
 const server = express();
 
@@ -18,7 +18,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: false,
   store: new KnexSessionStore({
-    knex: require('../database/dbConfig'),
+    knex: require('./database/dbConfig'),
     tablename: 'sessions',
     sidfieldname: 'sid',
     createtable: true,
@@ -27,10 +27,11 @@ const sessionConfig = {
 }
 
 server.use(express.json());
-server.use('/api/auth', authRouter);
-server.use('/api/users', userRouter);
-
 server.use(session(sessionConfig));
+
+server.use('/', authRouter);
+server.use('/', userRouter);
+
 
 server.get("/", (req, res) => {
   res.send("<h3>DB Helpers with knex</h3>");
